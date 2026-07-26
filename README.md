@@ -77,16 +77,16 @@ Type your story request when prompted. Type `bye` to exit at any point.
               │                             │
               ▼                             ▼
       ┌──────────────┐              ┌──────────────┐
-      │  CATEGORIZER │              │ EDIT PATCHER │◄──────┐
-      │  Identifies  │              │ Applies only │       │
-      │  story theme │              │ the requested│       │
-      └──────┬───────┘              │ change       │       │
-             │                      └──────┬───────┘       │
-             ▼                             │               │
-      ┌──────────────┐                     ▼               │
-      │   DRAFTER    │◄───────┐   ┌─────────────────┐      │
-      │  Writes age- │        │   │   GUARDRAILS    │      │
-      │  appropriate │        │   │    CHECKER      │      │
+      │  CATEGORIZER │              │ EDIT PATCHER │◄───────┐
+      │  Identifies  │              │ Applies only │        │
+      │  story theme │              │ the requested│        │
+      └──────┬───────┘              │ change       │        │
+             │                      └──────┬───────┘        │
+             ▼                             │                │
+      ┌──────────────┐                     ▼                │
+      │   DRAFTER    │◄───────┐   ┌─────────────────┐       │
+      │  Writes age- │        │   │   GUARDRAILS    │       │
+      │  appropriate │        │   │    CHECKER      │       │
       │  story using │        │   │   (20 rules)    │──FAIL─┘
       │  theme, arc, │        │   └──────┬──────────┘
       │  few-shot    │        │      PASS│
@@ -136,7 +136,7 @@ Type your story request when prompted. Type `bye` to exit at any point.
 ### Agent Summary
 
 | Agent | Role | Temperature |
-|---|---|---|
+|-------|------|-------------|
 | Safety Pre-Check | Screens input for forbidden themes before any pipeline runs | 0.0 |
 | Intent Router | Classifies request as new story or edit | 0.0 |
 | Categorizer | Identifies story theme (folklore, nature, magical, etc.) | 0.0 |
@@ -151,12 +151,14 @@ Type your story request when prompted. Type `bye` to exit at any point.
 
 ### Key Design Decisions
 
-**Safety-first architecture** — A dedicated safety pre-check runs on every raw input before any other agent is called. If it fails, the pipeline never starts. The Guardrails Checker then runs again on the story output with 20 independently evaluated rules covering: happy endings, no violence, no death, no fear, no abandonment, no cruelty, no animal harm, no scary nature, no sleep-related fear, no family conflict, no deception rewarded, no sexually explicit content, positive message, good character modeled, and more.
+**Safety-first architecture**: A dedicated safety pre-check runs on every raw input before any other agent is called. If it fails, the pipeline never starts. The Guardrails Checker then runs again on the story output with 20 independently evaluated rules covering: happy endings, no violence, no death, no fear, no abandonment, no cruelty, no animal harm, no scary nature, no sleep-related fear, no family conflict, no deception rewarded, no sexually explicit content, positive message, good character modeled, and more.
 
-**Parent Judge as the final gatekeeper** — Rather than a generic quality judge, the final agent adopts the perspective of a cautious parent sitting at their child's bedside. This catches things a technical rubric misses — a story can score well on every metric and still feel emotionally off for a 6-year-old at bedtime.
+**Parent Judge as the final gatekeeper**: Rather than a generic quality judge, the final agent adopts the perspective of a cautious parent sitting at their child's bedside. This catches things a technical rubric misses — a story can score well on every metric and still feel emotionally off for a 6-year-old at bedtime.
 
-**Fast-fail** — Guardrails failure skips the Critic and Parent Judge entirely, looping straight back to the Drafter. This avoids wasting LLM calls on unsafe content.
+**Fast-fail**: Guardrails failure skips the Critic and Parent Judge entirely, looping straight back to the Drafter. This avoids wasting LLM calls on unsafe content.
 
-**Edit mode** — The system distinguishes between a new story request and an edit to the existing story. Edits go through a targeted patch rather than full regeneration, preserving story continuity.
+**Edit mode**: The system distinguishes between a new story request and an edit to the existing story. Edits go through a targeted patch rather than full regeneration, preserving story continuity.
 
-**Story categorization** — The request is classified into a theme (folklore, nature, magical, adventure, etc.) before drafting, so the Drafter can tailor the story arc and tone to the category.
+**Story categorization**: The request is classified into a theme (folklore, nature, magical, adventure, etc.) before drafting, so the Drafter can tailor the story arc and tone to the category.
+
+**Email:** athulya.p.anil@gmail.com / athulyaanil@umass.edu

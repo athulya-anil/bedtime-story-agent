@@ -4,9 +4,9 @@
 
 A multi-agent bedtime story pipeline that takes any story request, generates a safe and engaging story for children ages 5-10, and allows the user to request changes through a feedback loop.
 
-The system uses 9 specialized agents, each with a distinct role, engineered system prompt, structured JSON output, and temperature tuned to the task. The problem was broken into distinct concerns — input safety, intent classification, theme categorization, story generation, safety validation, quality evaluation, human-perspective approval, formatting, and iterative feedback — and each is handled by a dedicated agent.
+The system uses 9 specialized agents, each with a distinct role, engineered system prompt, structured JSON output, and temperature tuned to the task. The problem was broken into distinct concerns: input safety, intent classification, theme categorization, story generation, safety validation, quality evaluation, human-perspective approval, formatting, and iterative feedback, and each is handled by a dedicated agent.
 
-The Drafter uses multiple story arc structures (classic, in media res, circular, day-in-the-life) and few-shot examples drawn from classic fables to produce vivid, age-appropriate writing. The Guardrails Checker evaluates 20 rules independently rather than as a single vibe check. The Parent Judge frames the final quality gate as a cautious parent at their child's bedside — catching things a technical rubric misses. Stories that fail safety or quality checks are automatically revised before reaching the user, up to 3 times, with consolidated feedback passed back to the Drafter on each attempt.
+The Drafter uses multiple story arc structures (classic, in media res, circular, day-in-the-life) and few-shot examples drawn from classic fables to produce vivid, age-appropriate writing. The Guardrails Checker evaluates 20 rules independently rather than as a single vibe check. The Parent Judge frames the final quality gate as a cautious parent at their child's bedside, catching things a technical rubric misses. Stories that fail safety or quality checks are automatically revised before reaching the user, up to 3 times, with consolidated feedback passed back to the Drafter on each attempt.
 
 The system also adds: a safety pre-check on every input, intent routing between new stories and edits, story categorization, edit mode that patches without full regeneration, a feedback loop, and output validation with typed fallbacks on every agent so nothing can trip the pipeline.
 
@@ -17,8 +17,8 @@ The system also adds: a safety pre-check on every input, intent routing between 
 **Clone the repository**
 
 ```bash
-git clone <your-repo-url>
-cd <repo-folder>
+git clone https://github.com/athulya-anil/bedtime-story-agent.git
+cd bedtime-story-agent 
 ```
 
 **Create and activate a virtual environment**

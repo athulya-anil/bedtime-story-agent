@@ -2,14 +2,14 @@
 
 from collections import defaultdict
 
-from anthropic import Anthropic
+from openai import OpenAI
 
 from ..state import CommenterState
 from ..prompts.classify import build_dedup_prompt
 from shared.json_utils import parse_json
 
 LINE_PROXIMITY = 3
-HAIKU_DEDUP_THRESHOLD = 5  # use LLM dedup for files with more than this many comments
+LLM_DEDUP_THRESHOLD = 5
 
 
 def semantic_dedup(state: CommenterState) -> dict:
@@ -23,7 +23,7 @@ def semantic_dedup(state: CommenterState) -> dict:
 
     result = []
     for file, file_comments in by_file.items():
-        if len(file_comments) <= HAIKU_DEDUP_THRESHOLD:
+        if len(file_comments) <= LLM_DEDUP_THRESHOLD:
             result.extend(_proximity_dedup(file_comments))
         else:
             result.extend(_llm_dedup(file, file_comments))
@@ -33,7 +33,6 @@ def semantic_dedup(state: CommenterState) -> dict:
 
 
 def _proximity_dedup(comments: list) -> list:
-    """Keep highest-confidence comment per ±3 line cluster."""
     sorted_comments = sorted(comments, key=lambda c: (-c.get("confidence", 0), c.get("line", 0)))
     kept = []
     for comment in sorted_comments:
@@ -45,16 +44,15 @@ def _proximity_dedup(comments: list) -> list:
 
 
 def _llm_dedup(file: str, comments: list) -> list:
-    """Use Haiku to cluster semantically overlapping comments."""
     prompt = build_dedup_prompt(file, comments)
     try:
-        client = Anthropic()
-        response = client.messages.create(
-            model="claude-haiku-4-5-20251001",
+        client = OpenAI()
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",
             max_tokens=2048,
             messages=[{"role": "user", "content": prompt}],
         )
-        text = next((b.text for b in response.content if b.type == "text"), "")
+        text = response.choices[0].message.content or ""
         result = parse_json(text)
         if result and "kept" in result and isinstance(result["kept"], list):
             return result["kept"]

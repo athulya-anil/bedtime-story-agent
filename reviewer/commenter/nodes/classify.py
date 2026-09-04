@@ -1,6 +1,6 @@
 """classify_and_threshold node: tag comments and apply confidence thresholds."""
 
-from anthropic import Anthropic
+from openai import OpenAI
 
 from ..state import CommenterState
 from ..prompts.classify import build_classify_prompt
@@ -13,16 +13,13 @@ def classify_and_threshold(state: CommenterState) -> dict:
     if not raw:
         return {"filtered_comments": [], "status": "classified"}
 
-    # Step 1: Refine category tags via Haiku
     tagged = _classify_comments(raw)
 
-    # Step 2: Suppress blocked categories
     after_suppress = [
         c for c in tagged
         if _get_coarse_category(c.get("category_tag", "")) not in SUPPRESSED_CATEGORIES
     ]
 
-    # Step 3: Apply per-assistant per-category confidence thresholds
     after_threshold = []
     for c in after_suppress:
         assistant = c.get("assistant", "standard")
@@ -40,19 +37,19 @@ def classify_and_threshold(state: CommenterState) -> dict:
 
 
 def _classify_comments(comments: list[dict]) -> list[dict]:
-    """Refine category_tag for each comment using Haiku."""
+    """Refine category_tag for each comment using gpt-4o-mini."""
     if not comments:
         return comments
 
     prompt = build_classify_prompt(comments)
     try:
-        client = Anthropic()
-        response = client.messages.create(
-            model="claude-haiku-4-5-20251001",
+        client = OpenAI()
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",
             max_tokens=1024,
             messages=[{"role": "user", "content": prompt}],
         )
-        text = next((b.text for b in response.content if b.type == "text"), "")
+        text = response.choices[0].message.content or ""
         result = parse_json(text)
 
         if isinstance(result, list):
@@ -62,7 +59,7 @@ def _classify_comments(comments: list[dict]) -> list[dict]:
                 if isinstance(idx, int) and 0 <= idx < len(comments) and tag:
                     comments[idx] = {**comments[idx], "category_tag": tag}
     except Exception as e:
-        print(f"  [classify] Haiku classifier error: {e}")
+        print(f"  [classify] classifier error: {e}")
 
     return comments
 

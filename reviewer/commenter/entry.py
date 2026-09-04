@@ -19,8 +19,8 @@ def main() -> dict:
     if not os.environ.get("GH_TOKEN"):
         print("ERROR: GH_TOKEN env var required", file=sys.stderr)
         sys.exit(1)
-    if not os.environ.get("ANTHROPIC_API_KEY"):
-        print("ERROR: ANTHROPIC_API_KEY env var required", file=sys.stderr)
+    if not os.environ.get("OPENAI_API_KEY"):
+        print("ERROR: OPENAI_API_KEY env var required", file=sys.stderr)
         sys.exit(1)
 
     try:

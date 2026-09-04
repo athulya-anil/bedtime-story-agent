@@ -1,6 +1,6 @@
-"""verify_fix node: Haiku checks the fix is valid and addresses the comment."""
+"""verify_fix node: gpt-4o-mini checks the fix is valid and addresses the comment."""
 
-from anthropic import Anthropic
+from openai import OpenAI
 from ..state import CommentFixerState
 from ..prompts.verify import build_verify_prompt
 from shared.json_utils import parse_json
@@ -18,14 +18,14 @@ def verify_fix(state: CommentFixerState) -> dict:
         line_number=state.get("line_number", 1),
     )
 
-    client = Anthropic()
-    response = client.messages.create(
-        model="claude-haiku-4-5-20251001",
+    client = OpenAI()
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
         max_tokens=256,
         messages=[{"role": "user", "content": prompt}],
     )
 
-    text = next((b.text for b in response.content if b.type == "text"), "")
+    text = response.choices[0].message.content or ""
     result = parse_json(text)
 
     valid = bool(result and result.get("valid"))

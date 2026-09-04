@@ -1,7 +1,7 @@
-"""generate_fix node: Claude Sonnet generates a concrete code fix."""
+"""generate_fix node: gpt-4o generates a concrete code fix."""
 
 import threading
-from anthropic import Anthropic
+from openai import OpenAI
 from ..state import CommentFixerState
 from ..prompts.generate import build_generate_prompt
 from shared.json_utils import parse_json
@@ -28,14 +28,14 @@ def generate_fix(state: CommentFixerState) -> dict:
     )
 
     with _SEMAPHORE:
-        client = Anthropic()
-        response = client.messages.create(
-            model="claude-sonnet-4-6",
+        client = OpenAI()
+        response = client.chat.completions.create(
+            model="gpt-4o",
             max_tokens=1024,
             messages=[{"role": "user", "content": prompt}],
         )
 
-    text = next((b.text for b in response.content if b.type == "text"), "")
+    text = response.choices[0].message.content or ""
     result = parse_json(text)
 
     if not result or not result.get("suggestion_lines"):

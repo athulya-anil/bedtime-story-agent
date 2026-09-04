@@ -21,8 +21,8 @@ def main() -> dict:
         print("ERROR: REPO and PR_NUMBER required", file=sys.stderr)
         sys.exit(1)
 
-    if not os.environ.get("GH_TOKEN") or not os.environ.get("ANTHROPIC_API_KEY"):
-        print("ERROR: GH_TOKEN and ANTHROPIC_API_KEY required", file=sys.stderr)
+    if not os.environ.get("GH_TOKEN") or not os.environ.get("OPENAI_API_KEY"):
+        print("ERROR: GH_TOKEN and OPENAI_API_KEY required", file=sys.stderr)
         sys.exit(1)
 
     pr_number = int(pr_number_raw)

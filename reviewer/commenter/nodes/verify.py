@@ -1,9 +1,9 @@
-"""verify node: Haiku grades each comment pass/fail."""
+"""verify node: gpt-4o-mini grades each comment pass/fail."""
 
 import threading
 from concurrent.futures import ThreadPoolExecutor
 
-from anthropic import Anthropic
+from openai import OpenAI
 
 from ..state import CommenterState
 from ..prompts.verify import build_verify_prompt
@@ -33,14 +33,14 @@ def verify(state: CommenterState) -> dict:
         )
 
         with _SEMAPHORE:
-            client = Anthropic()
-            response = client.messages.create(
-                model="claude-haiku-4-5-20251001",
+            client = OpenAI()
+            response = client.chat.completions.create(
+                model="gpt-4o-mini",
                 max_tokens=256,
                 messages=[{"role": "user", "content": prompt}],
             )
 
-        text = next((b.text for b in response.content if b.type == "text"), "")
+        text = response.choices[0].message.content or ""
         result = parse_json(text)
 
         if result and result.get("verified") is True:

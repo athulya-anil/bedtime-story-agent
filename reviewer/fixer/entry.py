@@ -19,8 +19,8 @@ def main() -> dict:
         print("ERROR: REPO, PR_NUMBER, COMMENT_ID, COMMENT_PATH required", file=sys.stderr)
         sys.exit(1)
 
-    if not os.environ.get("GH_TOKEN") or not os.environ.get("ANTHROPIC_API_KEY"):
-        print("ERROR: GH_TOKEN and ANTHROPIC_API_KEY required", file=sys.stderr)
+    if not os.environ.get("GH_TOKEN") or not os.environ.get("OPENAI_API_KEY"):
+        print("ERROR: GH_TOKEN and OPENAI_API_KEY required", file=sys.stderr)
         sys.exit(1)
 
     # comment_body may be JSON-encoded from GitHub Actions toJSON()

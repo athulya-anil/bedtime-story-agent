@@ -3,7 +3,7 @@
 import threading
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-from anthropic import Anthropic
+from openai import OpenAI
 
 from ..state import Comment
 from ..prompts.standard import build_standard_prompt
@@ -48,14 +48,14 @@ def review_file(state: dict) -> dict:
         )
 
         with _SEMAPHORE:
-            client = Anthropic()
-            response = client.messages.create(
-                model="claude-sonnet-4-6",
+            client = OpenAI()
+            response = client.chat.completions.create(
+                model="gpt-4o",
                 max_tokens=4096,
                 messages=[{"role": "user", "content": prompt}],
             )
 
-        text = next((b.text for b in response.content if b.type == "text"), "")
+        text = response.choices[0].message.content or ""
         data = parse_json(text)
         if not data or "comments" not in data:
             return

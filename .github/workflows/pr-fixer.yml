@@ -35,7 +35,7 @@ jobs:
       - name: Run Fixer
         working-directory: reviewer
         env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           LANGSMITH_API_KEY: ${{ secrets.LANGSMITH_API_KEY }}
           LANGCHAIN_TRACING_V2: "true"

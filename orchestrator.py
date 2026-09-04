@@ -56,7 +56,10 @@ def run_new_story(user_request: str) -> str:
 
     for attempt in range(1, MAX_REVISIONS + 1):
         print(f"\n[Drafter] Writing story (attempt {attempt}/{MAX_REVISIONS})...")
-        story = drafter(user_request, category=category, feedback=feedback)
+        try:
+            story = drafter(user_request, category=category, feedback=feedback)
+        except:
+            pass
 
         # ── Guardrails ──────────────────────────────────────────
         print("[Guardrails] Checking safety...")

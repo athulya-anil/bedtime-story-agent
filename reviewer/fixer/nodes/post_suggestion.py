@@ -39,5 +39,5 @@ def _format_suggestion(state: CommentFixerState) -> str:
         body += f"```suggestion\n{suggestion_text}\n```\n"
     if explanation:
         body += f"\n_{explanation}_\n"
-    body += "\n_Fix by ReviewAI · claude-sonnet-4-6_"
+    body += "\n_Fix by ReviewAI · gpt-4o_"
     return body

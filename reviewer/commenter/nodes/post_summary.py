@@ -95,7 +95,7 @@ def _format_summary(summary: PRSummary, meta: dict) -> str:
 
     lines.append(
         f"_Reviewed {summary['total_files_reviewed']} file(s) · "
-        f"claude-sonnet-4-6 + claude-haiku-4-5 · ReviewAI_"
+        f"gpt-4o + gpt-4o-mini · ReviewAI_"
     )
 
     return "\n".join(lines)

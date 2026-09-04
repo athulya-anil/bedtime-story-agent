@@ -55,7 +55,6 @@ Your ONLY job is to find security issues that could be exploited.
 - Code style, naming, formatting
 - Runtime bugs or logic errors (handled by Standard reviewer)
 - Structural anti-patterns (handled by Best Practices reviewer)
-- Issues already listed in Static Analysis Findings
 
 ## Output format
 Output ONLY valid JSON:

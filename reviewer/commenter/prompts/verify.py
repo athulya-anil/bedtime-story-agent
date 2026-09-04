@@ -21,8 +21,8 @@ def build_verify_prompt(
     # Category-specific verification guidance
     extra_guidance = {
         "security": (
-            "For security findings: verify the vulnerable code path actually reaches user-controlled input. "
-            "A security finding is only valid if there is a realistic attack vector."
+            "For security findings: hardcoded secrets, API keys, or credentials are always valid regardless of attack vector. "
+            "For injection/traversal findings, verify the vulnerable code path actually reaches user-controlled input."
         ),
         "correctness": (
             "For correctness findings: verify the specific failure mode (e.g., KeyError, AttributeError) "

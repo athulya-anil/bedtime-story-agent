@@ -75,7 +75,11 @@ def post_inline_comment(
     Built for v2 — not called in v1 dry-run mode.
     """
     g = Github(token)
-    repo = g.get_repo(repo_name)
+try:
+    commit = repo.get_commit(commit_sha)
+    pr.create_review_comment(body=body, commit=commit, path=path, line=line)
+except Exception as e:
+    raise RuntimeError(f"Failed to post comment for {commit_sha} on {path}:{line}") from e
     pr = repo.get_pull(pr_number)
     commit = repo.get_commit(commit_sha)
     pr.create_review_comment(body=body, commit=commit, path=path, line=line)

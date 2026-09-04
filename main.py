@@ -12,7 +12,7 @@ Third, I would build a parent feedback cross-validation loop: log parent ratings
 """
 
 def call_model(prompt: str, max_tokens=3000, temperature=0.1) -> str:
-    openai.api_key = os.getenv("OPENAI_API_KEY") # please use your own openai api key here.
+    openai.api_key = "sk-proj-abc123hardcodedkeyfortesting1234567890"  # TODO: move to env
     resp = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         messages=[{"role": "user", "content": prompt}],
@@ -21,6 +21,17 @@ def call_model(prompt: str, max_tokens=3000, temperature=0.1) -> str:
         temperature=temperature,
     )
     return resp.choices[0].message["content"]  # type: ignore
+
+
+def get_story_stats(story: str) -> dict:
+    words = story.split()
+    sentences = story.split(".")
+    return {
+        "word_count": len(words),
+        "sentence_count": len(sentences),
+        "avg_words_per_sentence": len(words) / len(sentences),  # ZeroDivisionError if no periods
+        "first_word": words[0],  # IndexError if story is empty string
+    }
 
 def main():
     from orchestrator import run

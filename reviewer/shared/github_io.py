@@ -49,9 +49,10 @@ def fetch_pr_diff(repo_name: str, pr_number: int, token: str) -> list[dict]:
             "related_files": [],
         })
 
-    # Sort by additions desc, cap at MAX_FILES_PER_PR
+    # Prioritize modified files (regressions) over added files (new code), then by additions
     from .config import MAX_FILES_PER_PR
-    file_diffs.sort(key=lambda x: x["additions"], reverse=True)
+    STATUS_PRIORITY = {"modified": 0, "renamed": 1, "added": 2, "removed": 3}
+    file_diffs.sort(key=lambda x: (STATUS_PRIORITY.get(x["status"], 9), -x["additions"]))
     file_diffs = file_diffs[:MAX_FILES_PER_PR]
 
     return file_diffs, pr_meta_extra

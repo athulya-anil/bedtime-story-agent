@@ -28,7 +28,7 @@ CONFIDENCE_THRESHOLDS: dict[str, dict[str, int]] = {
     },
     "best_practices": {
         "patterns": 4,
-        "conventions": 5,   # very high bar — most noise-prone assistant
+        "conventions": 3,
     },
     "security": {
         "security": 3,      # low threshold — false negatives are costly
